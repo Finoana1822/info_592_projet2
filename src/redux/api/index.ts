@@ -4,7 +4,6 @@ import {
   createApi,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
-import { UserState } from "../../context/authContext/authContext";
 
 interface CustomError {
   data: {
@@ -16,7 +15,7 @@ const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_APP_BACKEND_URI}`,
     prepareHeaders: (headers) => {
-      const { token } = UserState();
+      const token = localStorage.getItem('token') as string
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }

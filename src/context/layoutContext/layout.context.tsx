@@ -6,17 +6,17 @@ import Navbar from "../../components/navbar/navbar";
 
 type LayoutProps = {
   children: React.ReactNode;
-  token: string | null | undefined
+  token: string | null | undefined;
 };
 export const LayoutContext = React.createContext({});
 
 const LayoutProvider = ({ children, token }: LayoutProps) => {
   return (
     <LayoutContext.Provider value={{}}>
-      {token ? <Navbar /> : null}
-      <div style={{
-        marginTop: token ? "80px" : "0"
-      }}>{children}</div>
+      <div className="wrapper">
+        {token ? <Navbar /> : null}
+        <div className="main p-3">{children}</div>
+      </div>
     </LayoutContext.Provider>
   );
 };

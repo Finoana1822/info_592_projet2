@@ -1,124 +1,76 @@
-import React, { useEffect, useState } from "react";
-import "../../styles/Navbar.scss";
-import logo from "../../assets/blockbuster1.png";
-import { Link, useLocation } from "react-router-dom";
+import React, { useRef } from "react";
 import { menuLink } from "./link";
 import { MenuType } from "../../@types/menu.type";
+import { Link } from "react-router-dom";
+import { UserState } from "../../context/authContext/authContext";
 
 const Navbar: React.FC = () => {
-  const location = useLocation();
-  const [activeLink, setActiveLink] = useState<string>("");
-  useEffect(() => {
-    setActiveLink(location.pathname);
-  }, [location.pathname]);
+  const sidebarToogle = useRef<HTMLElement | null>(null);
+  const {logout} = UserState();
   return (
-    <>
-      <nav className="navbar navbar-expand-lg fixed-top">
-        <div className="container">
-          <Link className="navbar-brand me-auto" to="/">
-            <img
-              src={logo}
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-              alt=""
-              loading="lazy"
-            />
-            <span className="fs-4 fw-bold ms-2">BLOCKBUSTER</span>
-          </Link>
-          <div
-            className="offcanvas offcanvas-end"
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-          >
-            <div className="offcanvas-header">
-              <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-                <img
-                  src={logo}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
-                  alt=""
-                  loading="lazy"
-                />
-                <span className="fs-4 fw-bold ms-2"> BLOCKBUSTER</span>
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="offcanvas-body">
-              <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
-                {menuLink.map((menu: MenuType, index: number) => (
-                  <li className="nav-item" key={index}>
-                    {menu.subMenu ? (
-                      <div className="dropdown">
-                        <a
-                          className={`nav-link dropdown-toggle ${
-                            activeLink === menu.route ? "active" : ""
-                          }`}
-                          href="#"
-                          role="button"
-                          id={`dropdown-link-${index}`}
-                          data-bs-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        >
-                          {menu.menu}
-                        </a>
-                        <div
-                          className="dropdown-menu"
-                          aria-labelledby={`dropdown-link-${index}`}
-                        >
-                          {menu.subMenu.map(
-                            (subMenuItem: MenuType, subIndex: number) => (
-                              <Link
-                                key={subIndex}
-                                to={subMenuItem.route}
-                                className={`dropdown-item ${
-                                  activeLink === subMenuItem.route
-                                    ? "active"
-                                    : ""
-                                }`}
-                              >
-                                {subMenuItem.menu}
-                              </Link>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <Link
-                        to={menu.route}
-                        className={`nav-link mx-lg-2 ${
-                          activeLink === menu.route ? "active" : ""
-                        }`}
-                        aria-current="page"
-                      >
-                        {menu.menu}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <button
-            className="navbar-toggler text-center"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+    <aside id="sidebar" ref={sidebarToogle}>
+      <div className="d-flex">
+        <button
+          className="toggle-btn"
+          type="button"
+          onClick={() => {
+            if (sidebarToogle)
+              sidebarToogle.current?.classList.toggle("expand");
+          }}
+        >
+          <i className="lni lni-grid-alt"></i>
+        </button>
+        <div className="sidebar-logo">
+          <a href="#">KeFiEl</a>
         </div>
-      </nav>
-    </>
+      </div>
+      <ul className="sidebar-nav">
+        {menuLink.map((menu: MenuType, index: number) => (
+          <li key={index} className="sidebar-item">
+            {menu.subMenu ? (
+              <>
+                <a
+                  href={""}
+                  className="sidebar-link collapsed has-dropdown"
+                  data-bs-toggle="collapse"
+                  data-bs-target={`#auth-${index}`}
+                  aria-expanded="false"
+                  aria-controls={`auth-${index}`}
+                >
+                  <i className={menu.iconName}></i>
+                  <span>{menu.menu}</span>
+                </a>
+                <ul
+                  id={`auth-${index}`}
+                  className="sidebar-dropdown list-unstyled collapse"
+                  data-bs-parent="#sidebar"
+                >
+                  {menu.subMenu.map((sub: MenuType, subIndex: number) => (
+                    <li key={subIndex} className="sidebar-item">
+                      <Link to={sub.route} className="sidebar-link">
+                        {sub.menu}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <Link to={menu.route} className="sidebar-link">
+                <i className={menu.iconName}></i>
+                <span>{menu.menu}</span>
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <div className="sidebar-footer">
+        <Link to={"#"} className="sidebar-link" onClick={logout}>
+          <i className="lni lni-exit"></i>
+          <span>Logout</span>
+        </Link>
+      </div>
+    </aside>
   );
 };
 

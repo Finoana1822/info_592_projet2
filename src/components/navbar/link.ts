@@ -4,14 +4,20 @@ export const menuLink: MenuType[] = [
   {
     menu: "Home",
     route: "/",
+    iconName: "lni lni-home",
   },
   {
     menu: "Test",
     route: "/test",
+    iconName: "fa-solid fa-vial",
     subMenu: [
       {
-        menu: "test",
-        route: "/test/test",
+        menu: "test1",
+        route: "/test/test1",
+      },
+      {
+        menu: "test2",
+        route: "/test/test2",
       },
     ],
   },
