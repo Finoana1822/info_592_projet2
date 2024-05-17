@@ -10,15 +10,15 @@ export const menuLink: MenuType[] = [
     menu: "Mes archives",
     route: "/archives",
     iconName: "lni lni-archive",
-    subMenu: [
-      {
-        menu: "archive1",
-        route: "/archive/archive1",
-      },
-      {
-        menu: "archive2",
-        route: "/archive/archive2",
-      },
-    ],
+    // subMenu: [
+    //   {
+    //     menu: "archive1",
+    //     route: "/archive/archive1",
+    //   },
+    //   {
+    //     menu: "archive2",
+    //     route: "/archive/archive2",
+    //   },
+    // ],
   },
 ];

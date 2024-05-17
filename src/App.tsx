@@ -4,7 +4,7 @@ import Routing from "./routing/route";
 import "./styles/app.scss";
 
 function App() {
-  const {token} = UserState()
+  const { token } = UserState();
   return (
     <LayoutProvider token={token}>
       <Routing />
