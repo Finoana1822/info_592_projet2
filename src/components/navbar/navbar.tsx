@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
         ))}
       </ul>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-footer d-flex justify-content-center" title="se déconnecter">
         <Link to={"#"} className="sidebar-link" onClick={logout}>
           <i className="lni lni-exit"></i>
           <span>Logout</span>
