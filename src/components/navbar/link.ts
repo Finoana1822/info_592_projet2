@@ -7,17 +7,17 @@ export const menuLink: MenuType[] = [
     iconName: "lni lni-home",
   },
   {
-    menu: "Test",
-    route: "/test",
-    iconName: "fa-solid fa-vial",
+    menu: "Mes archives",
+    route: "/archives",
+    iconName: "lni lni-archive",
     subMenu: [
       {
-        menu: "test1",
-        route: "/test/test1",
+        menu: "archive1",
+        route: "/archive/archive1",
       },
       {
-        menu: "test2",
-        route: "/test/test2",
+        menu: "archive2",
+        route: "/archive/archive2",
       },
     ],
   },
