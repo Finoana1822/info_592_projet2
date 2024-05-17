@@ -10,11 +10,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AOSInit />
     <Router>
-      <Providers>
-        <AuthProvider>
+      <AuthProvider>
+        <Providers>
           <App />
-        </AuthProvider>
-      </Providers>
+        </Providers>
+      </AuthProvider>
     </Router>
   </React.StrictMode>
 );

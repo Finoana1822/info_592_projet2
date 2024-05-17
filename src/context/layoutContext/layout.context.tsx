@@ -14,7 +14,9 @@ const LayoutProvider = ({ children, token }: LayoutProps) => {
   return (
     <LayoutContext.Provider value={{}}>
       {token ? <Navbar /> : null}
-      <div className="children">{children}</div>
+      <div style={{
+        marginTop: token ? "80px" : "0"
+      }}>{children}</div>
     </LayoutContext.Provider>
   );
 };
