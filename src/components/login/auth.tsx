@@ -3,28 +3,32 @@ import logo from "../../assets/ebf4e287948865.5dc7ddb72cb74.gif";
 import AnimatedPage from "../../animation/transition";
 import { UserState } from "../../context/authContext/authContext";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import { MyToken } from "../../@types/token.type";
 
-const Auth: React.FC = () => {
+type AuthProps = {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const Auth: React.FC<AuthProps> = (props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const loginButton = useRef<HTMLButtonElement | null>(null);
   const { setToken, setUserInfo } = UserState();
-  const navigate = useNavigate();
 
   //fonction simulée
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    props.setIsLoading(true);
+    setTimeout(() => {
+      props.setIsLoading(false);
+      const fakeToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtldmludGhpZXJyeXJAZ21haWwuY29tIiwiaWQiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTkzMzU0N30.SIE2wgfZMbeFg7PzoEqDo3BC84OtK9poqf-_usSg9BI";
+      localStorage.setItem("token", fakeToken);
+      if (setToken) setToken(fakeToken);
+      const decodedToken = jwtDecode<MyToken>(fakeToken);
+      localStorage.setItem("userInfo", JSON.stringify(decodedToken));
+      if (setUserInfo) setUserInfo(decodedToken);
+    }, 3000);
     // login!({ email, password });
-    const fakeToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtldmludGhpZXJyeXJAZ21haWwuY29tIiwiaWQiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTkzMzU0N30.SIE2wgfZMbeFg7PzoEqDo3BC84OtK9poqf-_usSg9BI";
-    localStorage.setItem("token", fakeToken);
-    if (setToken) setToken(fakeToken);
-    const decodedToken = jwtDecode<MyToken>(fakeToken);
-    localStorage.setItem("userInfo", JSON.stringify(decodedToken));
-    if (setUserInfo) setUserInfo(decodedToken);
-    navigate("/");
   };
 
   return (

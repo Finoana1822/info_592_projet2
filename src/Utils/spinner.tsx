@@ -1,9 +1,10 @@
 import React from "react";
+import "../styles/spinner.scss";
 
 const Spinner: React.FC = () => {
   return (
-    <div className="spinner-border text-warning" role="status">
-      <span className="sr-only">Loading...</span>
+    <div className="spinner-overlay">
+      <div className="spinner"></div>
     </div>
   );
 };
