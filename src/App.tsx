@@ -1,7 +1,7 @@
 import { UserState } from "./context/authContext/authContext";
 import LayoutProvider from "./context/layoutContext/layout.context";
 import Routing from "./routing/route";
-import "./styles/App.scss";
+import "./styles/app.scss";
 
 function App() {
   const {token} = UserState()
