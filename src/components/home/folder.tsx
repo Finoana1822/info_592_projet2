@@ -21,7 +21,8 @@ const Folder: React.FC<FolderProps> = ({
     setIsChecked(selectedFolders.some((folder) => folder.id === folderItem.id));
   }, [selectedFolders, folderItem.id]);
 
-  const handleCheck = () => {
+  const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation(); // Prevent the click event from bubbling up to the parent div
     if (!isChecked) {
       setSelectedFolders((prev) => [...prev, folderItem]);
     } else {
@@ -35,7 +36,6 @@ const Folder: React.FC<FolderProps> = ({
     <div
       className="file-item"
       ref={folderCard}
-      onClick={() => navigate(`/${folderItem.id}/${folderItem.name}`)}
       onMouseEnter={() => {
         if (folderCard.current)
           folderCard.current.style.backgroundColor = "#ECECEC";
@@ -44,9 +44,15 @@ const Folder: React.FC<FolderProps> = ({
         if (folderCard.current)
           folderCard.current.style.backgroundColor = "#fff";
       }}
+      onClick={() => {
+        navigate(`/${folderItem.id}/${folderItem.name}`);
+      }}
     >
       <div className="file-item-select-bg bg-primary"></div>
-      <label className="file-item-checkbox custom-control custom-checkbox">
+      <label
+        className="file-item-checkbox custom-control custom-checkbox"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           type="checkbox"
           className="custom-control-input"
