@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FolderType } from "../../@types/folder.type";
+import { useNavigate } from "react-router-dom";
 
 type FolderProps = {
   folderItem: FolderType;
@@ -14,6 +15,7 @@ const Folder: React.FC<FolderProps> = ({
 }) => {
   const folderCard = useRef<HTMLDivElement | null>(null);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsChecked(selectedFolders.some((folder) => folder.id === folderItem.id));
@@ -33,6 +35,7 @@ const Folder: React.FC<FolderProps> = ({
     <div
       className="file-item"
       ref={folderCard}
+      onClick={() => navigate(`/${folderItem.id}/${folderItem.name}`)}
       onMouseEnter={() => {
         if (folderCard.current)
           folderCard.current.style.backgroundColor = "#ECECEC";

@@ -49,6 +49,9 @@ const Home: React.FC = () => {
         </div>
 
         <hr className="m-0" />
+        <ol className="breadcrumb text-big container-p-x py-3 m-0">
+          <li className="breadcrumb-item active">/</li>
+        </ol>
       </div>
 
       <div className="file-manager-container file-manager-col-view justify-content-center">
