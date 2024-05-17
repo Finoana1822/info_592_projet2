@@ -1,0 +1,22 @@
+export type Recipe = {
+  id: number;
+  recipe_name: string;
+  recipe_type: string;
+  steps: string;
+  link: string;
+  nb_personnes: number | null;
+  vegan: number;
+  four: number;
+  cooking_time: string;
+  standing_time: string | null;
+  preparation_time: string;
+  Ingredients_quantities: string;
+  Author: string;
+  url_media: string;
+  created_at: string;
+  updated_at: string;
+  lactose: number;
+  gluten: number;
+  sugar: number;
+  vegetarian: number;
+};
