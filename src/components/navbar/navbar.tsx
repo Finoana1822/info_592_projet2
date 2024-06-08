@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
             <i className="lni lni-grid-alt"></i>
           </button>
           <div className="sidebar-logo">
-            <a href="#">KeFiEl</a>
+            <a href="#">KeFiElFa</a>
           </div>
         </div>
         <ul className="sidebar-nav">
