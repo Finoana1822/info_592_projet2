@@ -36,11 +36,10 @@ const AuthProvider = ({ children }: LayoutProps) => {
 
   const login = async (user: UserType) => {
     const response = await auth(user);
-    if (response.status === 200) {
-      const token = response.data.access_token;
-      localStorage.setItem("token", token);
-      setToken(token);
-      const decodedToken = jwtDecode<MyToken>(token);
+    if (response.status === 201) {
+      localStorage.setItem("token", response.data.access_token);
+      setToken(response.data.access_token);
+      const decodedToken = jwtDecode<MyToken>(response.data.access_token);
       localStorage.setItem("userInfo", JSON.stringify(decodedToken));
       setUserInfo(decodedToken);
       navigate("/");
@@ -50,7 +49,6 @@ const AuthProvider = ({ children }: LayoutProps) => {
       console.log(response);
     }
   };
-
   const logout = () => {
     localStorage.clear();
     setToken(null);

@@ -12,7 +12,7 @@ const Auth: React.FC<AuthProps> = (props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const loginButton = useRef<HTMLButtonElement | null>(null);
-  const { setToken, setUserInfo, login } = UserState();
+  const { setToken, setUserInfo } = UserState();
 
   //fonction simulée
   const handleSubmit = (e: FormEvent) => {
@@ -30,19 +30,6 @@ const Auth: React.FC<AuthProps> = (props) => {
     }, 3000);
     // login!({ email, password });
   };
-
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   props.setIsLoading(true);
-  //   try {
-  //     await login!({ email, password });
-  //   } catch (error) {
-  //     console.error('Erreur lors de la connexion:', error);
-  //     alert('Échec de la connexion. Veuillez vérifier vos identifiants.');
-  //   } finally {
-  //     props.setIsLoading(false);
-  //   }
-  // };
 
   return (
     <AnimatedPage>
