@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fileData } from "../../fakeData/file";
 import { FileType } from "../../@types/file.type";
-import FileComponent from "../../components/home/file";
+import FileComponent from "../../components/home/file/file";
 
 const File: React.FC = () => {
   const { id, folderName } = useParams();

@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { UserType } from "../../@types/User.type";
 import { auth } from "../../services/auth.service";
 import { MyToken } from "../../@types/token.type";
+import Swal from "sweetalert2";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -37,16 +38,24 @@ const AuthProvider = ({ children }: LayoutProps) => {
   const login = async (user: UserType) => {
     const response = await auth(user);
     if (response.status === 200) {
-      const token = response.data.access_token;
+      const token = response.data.token;
       localStorage.setItem("token", token);
       setToken(token);
       const decodedToken = jwtDecode<MyToken>(token);
       localStorage.setItem("userInfo", JSON.stringify(decodedToken));
       setUserInfo(decodedToken);
+      Swal.fire({
+        icon: 'success',
+        title: 'Connexion réussie',
+        text: `Bienvenue, ${decodedToken.name || 'utilisateur'}!`,
+      });
       navigate("/");
     } else {
-      //besoin d'un pop-up
-      alert(`Le mot de passe ou l'email est incorrect`);
+      Swal.fire({
+        icon: 'error',
+        title: 'Erreur de connexion',
+        text: 'Le mot de passe ou l\'email est incorrect',
+      });
       console.log(response);
     }
   };

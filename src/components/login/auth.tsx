@@ -2,8 +2,7 @@ import React, { FormEvent, useRef, useState } from "react";
 import logo from "../../assets/ebf4e287948865.5dc7ddb72cb74.gif";
 import AnimatedPage from "../../animation/transition";
 import { UserState } from "../../context/authContext/authContext";
-import { jwtDecode } from "jwt-decode";
-import { MyToken } from "../../@types/token.type";
+import Swal from "sweetalert2";
 
 type AuthProps = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,36 +11,39 @@ const Auth: React.FC<AuthProps> = (props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const loginButton = useRef<HTMLButtonElement | null>(null);
-  const { setToken, setUserInfo, login } = UserState();
+  const { login } = UserState();
 
-  //fonction simulée
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+
     props.setIsLoading(true);
+    if (!email || !password) {
+      Swal.fire({
+        text: "Veuillez remplir tous les champs.",
+      });
+      return;
+    }
     setTimeout(() => {
       props.setIsLoading(false);
-      const fakeToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtldmludGhpZXJyeXJAZ21haWwuY29tIiwiaWQiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTkzMzU0N30.SIE2wgfZMbeFg7PzoEqDo3BC84OtK9poqf-_usSg9BI";
-      localStorage.setItem("token", fakeToken);
-      if (setToken) setToken(fakeToken);
-      const decodedToken = jwtDecode<MyToken>(fakeToken);
-      localStorage.setItem("userInfo", JSON.stringify(decodedToken));
-      if (setUserInfo) setUserInfo(decodedToken);
     }, 3000);
-    // login!({ email, password });
+    login!({ email, password });
   };
 
-  // const handleSubmit = async (e: FormEvent) => {
+  //fonction simulée
+  // const handleSubmit = (e: FormEvent) => {
   //   e.preventDefault();
   //   props.setIsLoading(true);
-  //   try {
-  //     await login!({ email, password });
-  //   } catch (error) {
-  //     console.error('Erreur lors de la connexion:', error);
-  //     alert('Échec de la connexion. Veuillez vérifier vos identifiants.');
-  //   } finally {
+  //   setTimeout(() => {
   //     props.setIsLoading(false);
-  //   }
+  //     const fakeToken =
+  //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImtldmludGhpZXJyeXJAZ21haWwuY29tIiwiaWQiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTkzMzU0N30.SIE2wgfZMbeFg7PzoEqDo3BC84OtK9poqf-_usSg9BI";
+  //     localStorage.setItem("token", fakeToken);
+  //     if (setToken) setToken(fakeToken);
+  //     const decodedToken = jwtDecode<MyToken>(fakeToken);
+  //     localStorage.setItem("userInfo", JSON.stringify(decodedToken));
+  //     if (setUserInfo) setUserInfo(decodedToken);
+  //   }, 3000);
+  //   // login!({ email, password });
   // };
 
   return (

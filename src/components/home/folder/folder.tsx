@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FolderType } from "../../@types/folder.type";
+import { FolderType } from "../../../@types/folder.type";
 import { useNavigate } from "react-router-dom";
 
 type FolderProps = {

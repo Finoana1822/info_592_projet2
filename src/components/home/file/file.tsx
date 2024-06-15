@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FileType } from "../../@types/file.type";
+import { FileType } from "../../../@types/file.type";
 
 type FileProps = {
   fileItem: FileType;

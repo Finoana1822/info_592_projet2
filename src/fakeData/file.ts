@@ -60,6 +60,6 @@ export const fileData = [
     id: 10,
     dateOfCreation: new Date("2023-10-01"),
     file: "file10.pdf",
-    folder: folderData[9],
+    folder: folderData[13],
   },
 ] as FileType[];

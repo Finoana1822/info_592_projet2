@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import "../../styles/home.scss";
 import { folderData } from "../../fakeData/folder";
 import { FolderType } from "../../@types/folder.type";
-import Folder from "../../components/home/folder";
+import Folder from "../../components/home/folder/folder";
+import AddDocumentModal from "../../components/modals/addDocument.modal";
 
 const Home: React.FC = () => {
   const [folders, setFolders] = useState<FolderType[]>([]);
   const [selectedFolders, setSelectedFolders] = useState<FolderType[]>([]);
+  const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
 
   useEffect(() => {
     setFolders(folderData);
@@ -21,6 +23,10 @@ const Home: React.FC = () => {
     setSelectedFolders([]);
   };
 
+  const handleShowAddDocumentModal = () => {
+    setShowAddDocumentModal(true);
+  };
+
   return (
     <div className="container flex-grow-1 light-style container-p-y">
       <div className="container-m-nx container-m-ny bg-lightest mb-3">
@@ -28,7 +34,7 @@ const Home: React.FC = () => {
 
         <div className="file-manager-actions container-p-x py-2">
           <div className="mb-1">
-            <button type="button" className="btn btn-primary mr-2">
+            <button type="button" className="btn btn-primary mr-2" onClick={handleShowAddDocumentModal}>
               <i className="ion ion-md-cloud-upload"></i>&nbsp; Upload
             </button>
           </div>
@@ -64,6 +70,10 @@ const Home: React.FC = () => {
           />
         ))}
       </div>
+
+      {showAddDocumentModal && (
+        <AddDocumentModal onClose={() => setShowAddDocumentModal(false)} />
+      )}
     </div>
   );
 };
