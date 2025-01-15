@@ -9,3 +9,6 @@ Ce projet est un Système de gestion de contenu d'entreprise (ECM) développé a
 - cd info_592_projet2
 - yarn install
 - yarn dev
+
+## note
+- Aller sur le lien: http://localhost:5173/ pour l'interface
