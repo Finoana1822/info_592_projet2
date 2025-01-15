@@ -2,19 +2,31 @@ import { DocumentType } from "../@types/document.type";
 import { instance } from "../api/axios.config";
 
 // Get all documents
-export const getDocuments = async (): Promise<DocumentType[]> => {
+export const getDocuments = async (userId: number): Promise<DocumentType[]> => {
   try {
-    const response = await instance.get<DocumentType[]>("/document");
+    const response = await instance.get<DocumentType[]>(`/document?user_id=${userId}`);
     return response.data;
   } catch (error: any) {
+    console.error("Error fetching documents:", error);
+    throw error.response;
+  }
+};
+
+// Get document by id
+export const getDocumentById = async (id: number): Promise<DocumentType[]> => {
+  try {
+    const response = await instance.get<DocumentType[]>(`/document/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching documents:", error);
     throw error.response;
   }
 };
 
 // Get all archives
-export const getArchives = async (): Promise<DocumentType[]> => {
+export const getArchives = async (userId: number): Promise<DocumentType[]> => {
   try {
-    const response = await instance.get<DocumentType[]>("/document/arvhives");
+    const response = await instance.get<DocumentType[]>(`/document/arvhives?user_id=${userId}`); 
     return response.data;
   } catch (error: any) {
     throw error.response;
@@ -42,19 +54,28 @@ export const cloneDocument = async (documentId: number): Promise<DocumentType> =
 };
 
 // Update document
-export const updateDocument = async (documentId: number, document: Partial<DocumentType>): Promise<DocumentType> => {
+export const updateDocument = async (documentId: number, formData: FormData): Promise<DocumentType> => {
   try {
-    const response = await instance.put<DocumentType>(`/document/update/${documentId}`, document);
+    const response = await instance.put<DocumentType>(`/document/update/${documentId}`, formData);
     return response.data;
   } catch (error: any) {
     throw error.response;
   }
 };
 
-// Delete document
-export const deleteDocument = async (documentId: number): Promise<void> => {
+// Archive document
+export const archiveDocument = async (documentId: number): Promise<void> => {
   try {
     await instance.delete(`/document/delete/${documentId}`);
+  } catch (error: any) {
+    throw error.response;
+  }
+};
+
+// delete document
+export const deleteDocument = async (documentId: number): Promise<void> => {
+  try {
+    await instance.delete(`/document/suppr-definitive/${documentId}`);
   } catch (error: any) {
     throw error.response;
   }

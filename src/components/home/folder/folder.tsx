@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FolderType } from "../../../@types/folder.type";
+import { DocumentType } from "../../../@types/document.type";
 import { useNavigate } from "react-router-dom";
 
 type FolderProps = {
-  folderItem: FolderType;
-  selectedFolders: FolderType[];
-  setSelectedFolders: React.Dispatch<React.SetStateAction<FolderType[]>>;
+  folderItem: DocumentType;
+  selectedFolders: DocumentType[];
+  setSelectedFolders: React.Dispatch<React.SetStateAction<DocumentType[]>>;
 };
 
 const Folder: React.FC<FolderProps> = ({
@@ -18,16 +18,16 @@ const Folder: React.FC<FolderProps> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsChecked(selectedFolders.some((folder) => folder.id === folderItem.id));
+    setIsChecked(selectedFolders.some((doc) => doc.id === folderItem.id));
   }, [selectedFolders, folderItem.id]);
 
   const handleCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.stopPropagation(); // Prevent the click event from bubbling up to the parent div
+    event.stopPropagation();
     if (!isChecked) {
       setSelectedFolders((prev) => [...prev, folderItem]);
     } else {
       setSelectedFolders((prev) =>
-        prev.filter((folder) => folder.id !== folderItem.id)
+        prev.filter((doc) => doc.id !== folderItem.id)
       );
     }
   };

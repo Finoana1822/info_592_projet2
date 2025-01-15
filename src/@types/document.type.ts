@@ -1,7 +1,7 @@
 export type DocumentType = {
   id: number;
   name: string;
-  path: string;
+  path: string | null;
   user_id: number;
   parent_id: number |null;
   type: string;

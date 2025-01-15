@@ -1,31 +1,79 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fileData } from "../../fakeData/file";
-import { FileType } from "../../@types/file.type";
+import { DocumentType } from "../../@types/document.type";
 import FileComponent from "../../components/home/file/file";
+import { archiveDocument, deleteDocument, getDocuments } from "../../services/document.service";
+import AddDocumentModal from "../../components/modals/addDocument.modal";
 
 const File: React.FC = () => {
-  const { id, folderName } = useParams();
-  const [files, setFiles] = useState<FileType[] | null>(null);
-  const [selectedFiles, setSelectedFiles] = useState<FileType[]>([]);
+  const { id, folderName } = useParams<{ id: string; folderName: string }>();
+  const [documents, setDocuments] = useState<DocumentType[]>([]);
+  const [selectedDocuments, setSelectedDocuments] = useState<DocumentType[]>([]);
+  const [showAddDocumentModal, setShowAddDocumentModal] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (id) {
-      const data = fileData.filter((file) => file.folder.id === +id);
-      setFiles(data);
+  const getUserInfo = () => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      return JSON.parse(userInfoString);
     }
-  }, [id]);
+    return null;
+  };
 
-  const handleDeleteFile = () => {
-    if (files) {
-      const idsToRemoveSet = new Set(selectedFiles.map((folder) => folder.id));
-      const filteredFileData = files.filter(
-        (file) => !idsToRemoveSet.has(file.id)
-      );
-      setFiles(filteredFileData);
-      setSelectedFiles([]);
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
+  const fetchDocuments = async () => {
+    const userInfo = getUserInfo();
+    if (!userInfo || !userInfo.id) {
+      console.error("User ID not found");
+      return;
     }
+  
+    try {
+      const docs = await getDocuments(userInfo.id);
+      console.log("Documents received from API:", docs);
+  
+      // Filtrer les documents qui ont le bon parent_id ou sont à la racine (parent_id null)
+      const filteredDocs = docs.filter((doc: DocumentType) => {
+        return doc.parent_id === Number(id) || (doc.parent_id === null && doc.type === 'file');
+      });
+  
+      console.log("Filtered documents:", filteredDocs);
+      setDocuments(filteredDocs);
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
+  };
+  
+  
+
+  const handleArchiveDocuments = async () => {
+    try {
+      const idsToRemove = selectedDocuments.map((doc) => doc.id);
+      await Promise.all(idsToRemove.map((id) => archiveDocument(id)));
+      await fetchDocuments();
+      setSelectedDocuments([]);
+    } catch (error) {
+      console.error("Error archiving documents:", error);
+    }
+  };
+
+  const handleDeleteDocuments = async () => {
+    try {
+      const idsToRemoveSet = new Set(selectedDocuments.map((doc) => doc.id));
+      await Promise.all(selectedDocuments.map((doc) => deleteDocument(doc.id)));
+      const filteredDocuments = documents.filter((doc) => !idsToRemoveSet.has(doc.id));
+      setDocuments(filteredDocuments);
+      setSelectedDocuments([]);
+    } catch (error) {
+      console.error("Error deleting documents:", error);
+    }
+  };
+
+  const handleShowAddDocumentModal = () => {
+    setShowAddDocumentModal(true);
   };
 
   return (
@@ -35,22 +83,31 @@ const File: React.FC = () => {
 
         <div className="file-manager-actions container-p-x py-2">
           <div className="mb-1">
-            <button type="button" className="btn btn-primary mr-2">
+            <button
+              type="button"
+              className="btn btn-primary mr-2"
+              onClick={handleShowAddDocumentModal}
+              title="addDocument"
+            >
               <i className="ion ion-md-cloud-upload"></i>&nbsp; Upload
             </button>
           </div>
-          {selectedFiles.length > 0 && (
+          {selectedDocuments.length > 0 && (
             <div>
-              <div>
-                <button
-                  type="button"
-                  className="btn btn-danger mr-2"
-                  onClick={handleDeleteFile}
-                >
-                  <i className="ion ion-md-trash"></i>&nbsp;{" "}
-                  {`Delete${selectedFiles.length > 1 ? "s" : ""}`}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="btn btn-success mr-2"
+                onClick={handleArchiveDocuments}
+              >
+                <i className="ion ion-md-archive"></i>&nbsp; Archiver
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger mr-2"
+                onClick={handleDeleteDocuments}
+              >
+                <i className="ion ion-md-delete"></i>&nbsp; Supprimer
+              </button>
             </div>
           )}
         </div>
@@ -63,26 +120,34 @@ const File: React.FC = () => {
             style={{
               cursor: "pointer",
             }}
-          >{`/${folderName}/`}</li>
+          >
+            {`/${folderName}/`}
+          </li>
         </ol>
       </div>
 
       <div className="file-manager-container file-manager-col-view justify-content-center">
-        {files?.length
-          ? files?.map((file: FileType, index: number) => (
-              <FileComponent
-                fileItem={file}
-                key={index}
-                selectedFiles={selectedFiles}
-                setSelectedFiles={setSelectedFiles}
-              />
-            ))
-          : 
-          <div>
-            No File
-          </div>
-          }
+        {documents.length > 0 ? (
+          documents.map((doc: DocumentType) => (
+            <FileComponent
+              fileItem={doc}
+              key={doc.id}
+              selectedFiles={selectedDocuments}
+              setSelectedFiles={setSelectedDocuments}
+            />
+          ))
+        ) : (
+          <div>No Document</div>
+        )}
       </div>
+
+      {showAddDocumentModal && (
+        <AddDocumentModal 
+          onClose={() => setShowAddDocumentModal(false)} 
+          parentId={Number(id)} 
+          addDocumentToList={(newDocument: DocumentType) => setDocuments([...documents, newDocument])} 
+        />
+      )}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 type AuthProps = {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 const Auth: React.FC<AuthProps> = (props) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");

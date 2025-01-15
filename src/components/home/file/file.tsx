@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FileType } from "../../../@types/file.type";
+import { DocumentType } from "../../../@types/document.type";
 
 type FileProps = {
-  fileItem: FileType;
-  selectedFiles: FileType[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<FileType[]>>;
+  fileItem: DocumentType;
+  selectedFiles: DocumentType[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<DocumentType[]>>;
 };
 
 const FileComponent: React.FC<FileProps> = ({
@@ -14,20 +14,31 @@ const FileComponent: React.FC<FileProps> = ({
 }) => {
   const fileCard = useRef<HTMLDivElement | null>(null);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [fileExtension, setFileExtension] = useState<string>("");
 
   useEffect(() => {
-    setIsChecked(selectedFiles.some((folder) => folder.id === fileItem.id));
+    setIsChecked(selectedFiles.some((doc) => doc.id === fileItem.id));
   }, [selectedFiles, fileItem.id]);
+
+  useEffect(() => {
+    if (fileItem.path) {
+      const extension = fileItem.path.split('.').pop(); // Obtenir l'extension du fichier
+      if (extension) {
+        setFileExtension(extension);
+      }
+    }
+  }, [fileItem.path]);
 
   const handleCheck = () => {
     if (!isChecked) {
       setSelectedFiles((prev) => [...prev, fileItem]);
     } else {
       setSelectedFiles((prev) =>
-        prev.filter((file) => file.id !== fileItem.id)
+        prev.filter((doc) => doc.id !== fileItem.id)
       );
     }
   };
+
   return (
     <div
       className="file-item"
@@ -50,16 +61,9 @@ const FileComponent: React.FC<FileProps> = ({
         />
         <span className="custom-control-label"></span>
       </label>
-      <div className={`file-item-icon far fa-file-${fileItem.file.split('.')[1]} text-secondary`}></div>
-      {/* <div
-            className="file-item-img"
-            style={{
-              backgroundImage:
-                "url(https://bootdey.com/img/Content/avatar/avatar1.png)",
-            }}
-          ></div> */}
+      <div className={`file-item-icon far fa-file-${fileExtension} text-secondary`}></div>
       <a href="#" className="file-item-name">
-        {fileItem.file.split(".")[0]}
+        {fileItem.name.split(".")[0]}
       </a>
     </div>
   );
